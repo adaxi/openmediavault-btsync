@@ -67,7 +67,7 @@ Ext
                                     name : "listening_port",
                                     fieldLabel : "Listening port",
                                     vtype : "port",
-                                    minValue : 1,
+                                    minValue : 0,
                                     maxValue : 65535,
                                     allowDecimals : false,
                                     allowBlank : false,
