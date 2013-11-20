@@ -1,0 +1,16 @@
+Source: openmediavault-btsync
+Section: net
+Priority: optional
+Maintainer: Gerik Bonaert <dev@adaxisoft.be>
+Build-Depends: debhelper (>> 7), gettext
+Standards-Version: 3.6.10
+Homepage: http://adaxisoft.be
+
+Package: openmediavault-btsync
+Architecture: all
+Depends: openmediavault (>= 0.5.7)
+Priority: optional
+Description: Provides a configuration interface for OpenMediaVault
+ BitTorrent Sync is a simple tool that applies p2p protocol for direct  live 
+ folder sync with  maximum security, network speed and storage capacity. It has 
+ native versions for Mac, Windows and Linux, as well as native NAS integration.

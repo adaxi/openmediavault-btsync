@@ -1,0 +1,62 @@
+#!/bin/sh
+#
+# @license   http://www.gnu.org/licenses/gpl.html GPL Version 2
+# @author    Gerik Bonaert <dev@adaxisoft.be>
+# @copyright Copyright (c) 2013 Gerik Bonaert
+#
+# BT Sync for OpenMediaVault is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# any later version.
+#
+# OpenMediaVault is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with OpenMediaVault. If not, see <http://www.gnu.org/licenses/>.
+
+set -e
+
+. /etc/default/openmediavault
+. /usr/share/openmediavault/scripts/helper-functions
+
+case "$1" in
+	configure)
+		########################################################################
+		# Set the default settings of the btsync package to those expected by
+		# OpenMediaVault.
+		########################################################################
+
+		mkdir -p /etc/btsync
+		getent passwd btsync || useradd --system --user-group --home-dir /var/lib/btsync --create-home btsync
+
+		########################################################################
+		# Update the configuration.
+		# <config>
+		#   <services>
+		#     <btsync>
+		#       <enable>0</enable>
+		#     </btsync>
+		#   </services>
+		# </config>
+		########################################################################
+		if ! omv_config_exists "/config/services/btsync"; then
+			echo "Initialize configuration"
+			object="<enable>0</enable>"
+			omv_config_add_element "/config/services" "btsync" "${object}" true
+		fi
+
+	;;
+
+	abort-upgrade|abort-remove|abort-deconfigure)
+	;;
+
+	*)
+		echo "postinst called with unknown argument '$1'" >&2
+		exit 1
+	;;
+esac
+
+exit 0

@@ -1,0 +1,136 @@
+#!/bin/sh
+#
+# @license http://www.gnu.org/licenses/gpl-2.0.html GPL Version 2
+# @author Gerik Bonaert <dev@adaxisoft.be>
+# @copyright Copyright (c) 2013 Gerik Bonaert
+# 
+# This program is free software; you can redistribute it and/or modify it under
+# the terms of the GNU General Public License as published by the Free Software
+# Foundation; either version 2 of the License, or (at your option) any later
+# version.
+# 
+# This program is distributed in the hope that it will be useful, but WITHOUT
+# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+# FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+# details.
+# 
+# You should have received a copy of the GNU General Public License along with
+# this program; If not, see <http://www.gnu.org/licenses/>.
+#
+
+set -e
+
+. /etc/default/openmediavault
+. /usr/share/openmediavault/scripts/helper-functions
+
+OMV_BTSYNC_RUN_AS=${OMV_BTSYNC_RUN_AS:-"btsync"}
+OMV_BTSYNC_CONFIG_FILE=${OMV_BTSYNC_CONFIG_FILE:-"/etc/btsync/openmediavault.conf"}
+OMV_BTSYNC_DEFAULT_FILE=${OMV_BTSYNC_DEFAULT_FILE:-"/etc/default/btsync"}
+
+mkdir -p /etc/btsync
+
+xmlstarlet sel -t -m "//services/btsync" \
+  -o "//!/usr/sbin/btsync-daemon --config" -n \
+  -o "// DAEMON_UID=${OMV_BTSYNC_RUN_AS}" -n \
+  -o "// DAEMON_UMASK=0002" -n \
+  -o "{" -n \
+  -v "concat('  \"device_name\" : \"', device_name, '\"')" -n \
+  -v "concat('  \"listening_port\" : ', listening_port)" -n \
+  -o '  "storage_path" : "/var/lib/btsync/"' -n \
+  -o '  "pid_file" : "/var/run/btsync/btsync.pid"' -n \
+  -o '  "check_for_updates" : false' -n \
+  -v "concat('  \"use_upnp\" : ', use_upnp)" -n \
+  -v "concat('  \"download_limit\" : ', download_limit)" -n \
+  -v "concat('  \"upload_limit\" : ', upload_limit)" -n \
+  -o '  "shared_folders" : [' -n \
+${OMV_CONFIG_FILE} | xmlstarlet unesc > ${OMV_BTSYNC_CONFIG_FILE}  
+
+comma=0
+xmlstarlet sel -t -m "//services/btsync/sharedfolders/sharedfolder[enable='1']" \
+  -v "uuid" -i "position() != last()" -n -b \
+  ${OMV_CONFIG_FILE} | xmlstarlet unesc |
+  while read uuid; do
+    if $comma; then echo "," >> ${OMV_BTSYNC_CONFIG_FILE}; fi
+    comma=1
+    
+    KNOWN_HOSTS=$(xmlstarlet sel -t -v "//services/btsync/sharedfolders/sharedfolder[uuid='${uuid}']/known_hosts" ${OMV_BTSYNC_CONFIG_FILE})
+    hosts=(${KNOWN_HOSTS//,/ })
+    KNOWN_HOSTS=$(printf ",'%s'" "${hosts[@]}")
+    KNOWN_HOSTS=${KNOWN_HOSTS:1}
+    
+    
+    xmlstarlet sel -t -m "//services/btsync/sharedfolders/sharedfolder[uuid='${uuid}']" \
+        -o "{" -n \
+        -v "   concat(' \"secret\" : \"', secret,'\",')" -n \
+        -o "   \"dir\" : \"${OMV_XMLSTARLET_GET_SHAREDFOLDER_NAME}\", " -n \
+        -i "use_relay_server[. = '1']" -o "  \"use_relay_server\" : true," -n -b \
+        -i "use_relay_server[. != '1']" -o "  \"use_relay_server\" : false," -n -b \
+        -i "use_tracker[. = '1']" -o "  \"use_tracker\" : true," -n -b \
+        -i "use_tracker[. != '1']" -o "  \"use_tracker\" : false," -n -b \
+        -i "use_dht[. = '1']" -o "  \"use_dht\" : true," -n -b \
+        -i "use_dht[. != '1']" -o "  \"use_dht\" : false," -n -b \
+        -i "search_lan[. = '1']" -o "  \"search_lan\" : true," -n -b \
+        -i "search_lan[. != '1']" -o "  \"search_lan\" : false," -n -b \
+        -i "use_sync_trash[. = '1']" -o "  \"use_sync_trash\" : true," -n -b \
+        -i "use_sync_trash[. != '1']" -o "  \"use_sync_trash\" : false," -n -b \
+        -o "  \"known_hosts\" : [ " -n \
+        -o "${KNOWN_HOSTS}" -n \
+        -o "   ]" -n \
+        -o "}"
+    ${OMV_CONFIG_FILE} | xmlstarlet unesc >> ${OMV_BTSYNC_CONFIG_FILE}
+  done 
+  
+cat <<EOF >> ${OMV_BTSYNC_CONFIG_FILE}
+  ]     
+}
+EOF
+
+
+  #  "shared_folders" :
+  #[
+    #  {
+        #    //  use --generate-secret in command line to create new secret
+      #"secret" : "MY_SECRET_1",                   // * required field
+      #"dir" : "/home/user/bittorrent/sync_test", // * required field
+
+        #//  use relay server when direct connection fails
+      #"use_relay_server" : true,
+      #"use_tracker" : true,
+      #"use_dht" : false,
+      #"search_lan" : true,
+        #  //  enable SyncArchive to store files deleted on remote devices
+      #"use_sync_trash" : true,
+        #  //  specify hosts to attempt connection without additional search
+      #"known_hosts" :
+      #[
+        #  "192.168.1.2:44444"
+      #]
+    #}
+  # ]
+
+chmod 644 ${OMV_BTSYNC_CONFIG_FILE}
+
+cat <<EOF > ${OMV_BTSYNC_DEFAULT_FILE}
+# This is the configuration file for /etc/init.d/btsync
+#
+# Start only these btsync instances automatically via
+# init script.
+# Allowed values are "all", "none" or space separated list of
+# names of the instances. If empty, "all" is assumed.
+#
+# The instance name refers to the btsync configuration file name.
+# i.e. "general" would be /etc/btsync/general.conf
+#
+#AUTOSTART="all"
+#AUTOSTART="none"
+AUTOSTART="openmediavault"
+#
+# Optional arguments to btsync's command line. Be careful!
+# You should only add thngs here if you know EXACTLY what
+# you are doing!
+DAEMON_ARGS=""
+#
+# Enable this to see more output during the init script
+# execution
+#DAEMON_INIT_DEBUG=1
+EOF
