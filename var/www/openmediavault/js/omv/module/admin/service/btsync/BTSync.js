@@ -22,7 +22,7 @@ OMV.WorkspaceManager.registerNode({
     path : "/service",
     text : _("BT Sync"),
     icon16 : "images/btsync.png",
-    iconSvg : "images/addns.svg",
+    iconSvg : "images/btsync.svg",
     position : 40
 });
 
