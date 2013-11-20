@@ -54,6 +54,15 @@ Ext
                                     checked : false
                                 },
                                 {
+                                    xtype : "textfield",
+                                    name : "device_name",
+                                    fieldLabel : _("Share name"),
+                                    plugins : [ {
+                                        ptype : "fieldinfo",
+                                        text : _("Specifies a name by which this device will be called.")
+                                    } ]
+                                },
+                                {
                                     xtype : "numberfield",
                                     name : "listening_port",
                                     fieldLabel : "Listening port",
@@ -72,7 +81,7 @@ Ext
                                     xtype : "checkbox",
                                     name : "use_upnp",
                                     fieldLabel : _("Use UPnP"),
-                                    checked : false
+                                    checked : true
                                 },
                                 {
                                     xtype : "numberfield",
