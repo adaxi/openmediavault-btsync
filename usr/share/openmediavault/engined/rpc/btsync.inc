@@ -311,7 +311,7 @@ class OMVRpcServiceBTSync extends OMVRpcServiceAbstract {
 			// Update existing configuration object.
 			$success = $xmlConfig->replace (
 					"//services/btsync/sharedfolders/" .
-							 "sharedfolder[uuid='{$params['uuid']}']", $object );
+							 "sharedfolder[uuid='{$object['uuid']}']", $object );
 		}
 		if (FALSE === $success) {
 			throw new OMVException ( OMVErrorMsg::E_CONFIG_SET_OBJECT_FAILED );
