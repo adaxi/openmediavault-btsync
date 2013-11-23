@@ -168,7 +168,7 @@ class OMVRpcServiceBTSync extends OMVRpcServiceAbstract {
 						 $GLOBALS['OMV_JSONSCHEMA_COUNTFIELD'] . '},
 				  "sortfield":{' .
 						 $GLOBALS['OMV_JSONSCHEMA_SORTFIELD'] . '},
-				  "sortsharedfolder":{' .
+				  "sortdir":{' .
 						 $GLOBALS['OMV_JSONSCHEMA_SORTDIR'] . '}
 			  }
 		  }' );
@@ -202,7 +202,7 @@ class OMVRpcServiceBTSync extends OMVRpcServiceAbstract {
 		}
 		// Filter result.
 		return $this->applyFilter ( $objects, $params['start'],
-				$params['limit'], $params['sortfield'], $params['sortsharedfolder'] );
+				$params['limit'], $params['sortfield'], $params['sortdir'] );
 	}
 	
 	/**
