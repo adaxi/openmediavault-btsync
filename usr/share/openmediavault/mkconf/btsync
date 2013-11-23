@@ -54,10 +54,11 @@ xmlstarlet sel -t -m "//services/btsync/sharedfolders/sharedfolder[enable='1']" 
     comma=1
     
     KNOWN_HOSTS=$(xmlstarlet sel -t -v '//services/btsync/sharedfolders/sharedfolder[uuid="${uuid}"]/known_hosts' ${OMV_CONFIG_FILE}) || /bin/true
-    hosts=${KNOWN_HOSTS//,/ }
-    KNOWN_HOSTS=$(printf ",'%s'" "${hosts[@]}")
-    KNOWN_HOSTS=${KNOWN_HOSTS:1}
-    
+    if [ -n "${KNOWN_HOSTS}" ]; then
+        hosts=${KNOWN_HOSTS//,/}
+        KNOWN_HOSTS=$(printf ",'%s'" "${hosts[@]}")
+        KNOWN_HOSTS=${KNOWN_HOSTS:1}
+    fi
     
     xmlstarlet sel -t -m "//services/btsync/sharedfolders/sharedfolder[uuid='${uuid}']" \
         -o "{" -n \
