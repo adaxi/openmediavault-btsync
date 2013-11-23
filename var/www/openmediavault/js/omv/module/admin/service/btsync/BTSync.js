@@ -66,7 +66,6 @@ Ext
                                     xtype : "numberfield",
                                     name : "listening_port",
                                     fieldLabel : "Listening port",
-                                    vtype : "port",
                                     minValue : 0,
                                     maxValue : 65535,
                                     allowDecimals : false,
