@@ -45,6 +45,13 @@ case "$1" in
 		if ! omv_config_exists "/config/services/btsync"; then
 			echo "Initialize configuration"
 			object="<enable>0</enable>"
+			object="${object}<device_name></device_name>"
+			object="${object}<listening_port>1</listening_port>"
+			object="${object}<use_dth>1</use_dht>"
+			object="${object}<use_upnp>1</use_upnp>"
+			object="${object}<download_limit>0</download_limit>"
+			object="${object}<upload_limit>0</upload_limit>"
+			object="${object}<sharedfolders></sharedfolders>"
 			omv_config_add_element "/config/services" "btsync" "${object}" true
 		fi
 
