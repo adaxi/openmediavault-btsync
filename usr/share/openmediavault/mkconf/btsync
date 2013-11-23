@@ -76,7 +76,7 @@ xmlstarlet sel -t -m "//services/btsync/sharedfolders/sharedfolder[enable='1']" 
         -o "  \"known_hosts\" : [ " -n \
         -o "${KNOWN_HOSTS}" -n \
         -o "   ]" -n \
-        -o "}"
+        -o "}" \
     ${OMV_CONFIG_FILE} | xmlstarlet unesc >> ${OMV_BTSYNC_CONFIG_FILE}
   done 
   

@@ -144,7 +144,7 @@ class OMVRpcServiceBTSync extends OMVRpcServiceAbstract {
 	 *        \em start The index where to start.
 	 *        \em limit The number of objects to process.
 	 *        \em sortfield The name of the column used to sort.
-	 *        \em sortdir The sort direction, ASC or DESC.
+	 *        \em sortsharedfolder The sort sharedfolderection, ASC or DESC.
 	 * @param context The context of the caller.
 	 * @return An array containing the requested objects. The field \em total
 	 *         contains the total number of objects, \em data contains the object
@@ -168,7 +168,7 @@ class OMVRpcServiceBTSync extends OMVRpcServiceAbstract {
 						 $GLOBALS['OMV_JSONSCHEMA_COUNTFIELD'] . '},
 				  "sortfield":{' .
 						 $GLOBALS['OMV_JSONSCHEMA_SORTFIELD'] . '},
-				  "sortdir":{' .
+				  "sortsharedfolder":{' .
 						 $GLOBALS['OMV_JSONSCHEMA_SORTDIR'] . '}
 			  }
 		  }' );
@@ -182,12 +182,12 @@ class OMVRpcServiceBTSync extends OMVRpcServiceAbstract {
 		}
 		// Add additional informations.
 		foreach ( $objects as $objectk => &$objectv ) {
-			$objectv['dir'] = gettext ( "n/a" );
+			$objectv['sharedfolder'] = gettext ( "n/a" );
 			// Get the shared folder configuration object
 			$sfobject = $xmlConfig->get (
-					"//system/shares/sharedfolder[" . "uuid='{$objectv['dir']}']" );
+					"//system/shares/sharedfolder[" . "uuid='{$objectv['sharedfolderref']}']" );
 			if (! is_null ( $sfobject ) && ! empty ( $sfobject )) {
-				$objectv['dir'] = $sfobject['name'];
+				$objectv['sharedfolder'] = $sfobject['name'];
 			}
 			// Modify result data.
 			$objectv['enable'] = boolval ( $objectv['enable'] );
@@ -202,7 +202,7 @@ class OMVRpcServiceBTSync extends OMVRpcServiceAbstract {
 		}
 		// Filter result.
 		return $this->applyFilter ( $objects, $params['start'],
-				$params['limit'], $params['sortfield'], $params['sortdir'] );
+				$params['limit'], $params['sortfield'], $params['sortsharedfolder'] );
 	}
 	
 	/**
@@ -274,7 +274,7 @@ class OMVRpcServiceBTSync extends OMVRpcServiceAbstract {
 			  "properties":{
 				  "uuid":{' . $GLOBALS['OMV_JSONSCHEMA_UUID_UNDEFINED'] . '},
 				  "enable":{"type":"boolean"},
-				  "dirref":{' . $GLOBALS['OMV_JSONSCHEMA_UUID'] . '},
+				  "sharedfolderref":{' . $GLOBALS['OMV_JSONSCHEMA_UUID'] . '},
 				  "secret":{"type":"string"},
 				  "use_relay_server":{"type":"boolean"},
 				  "use_tracker":{"type":"boolean"},
@@ -291,7 +291,7 @@ class OMVRpcServiceBTSync extends OMVRpcServiceAbstract {
 						"uuid" => $uuid,
 						"enable" => array_boolval ( $params, 'enable' ),
 						"secret" => $params['secret'],
-						"dirref" => $params['dirref'],
+						"sharedfolderref" => $params['sharedfolderref'],
 						"use_relay_server" => array_boolval ( $params, 'use_relay_server' ),
 						"use_tracker" => array_boolval ( $params, 'use_tracker' ),
 						"use_dht" => array_boolval ( $params, 'use_dht' ),

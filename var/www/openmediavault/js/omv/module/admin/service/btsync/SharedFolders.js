@@ -64,7 +64,7 @@ Ext
                             },
                             {
                                 xtype : "sharedfoldercombo",
-                                name : "dirref",
+                                name : "sharedfolderref",
                                 fieldLabel : _("Shared folder"),
                                 plugins : [ {
                                     ptype : "fieldinfo",
@@ -88,7 +88,7 @@ Ext
                                 checked : true,
                                 plugins : [ {
                                     ptype : "fieldinfo",
-                                    text : _("Use relay server when direct connection fails.")
+                                    text : _("Use relay server when sharedfolderect connection fails.")
                                 } ]
                             },
                             {
@@ -159,8 +159,8 @@ Ext.define("OMV.module.admin.service.btsync.SharedFolders", {
     }, {
         text : _("Shared folder"),
         sortable : true,
-        dataIndex : "dir",
-        stateId : "dir"
+        dataIndex : "sharedfolder",
+        stateId : "sharedfolder"
     } ],
 
     initComponent : function() {
@@ -177,7 +177,7 @@ Ext.define("OMV.module.admin.service.btsync.SharedFolders", {
                         name : "enable",
                         type : "boolean"
                     }, {
-                        name : "dir",
+                        name : "sharedfolder",
                         type : "string"
                     }, {
                         name : "secret",
