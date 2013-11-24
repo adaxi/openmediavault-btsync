@@ -275,7 +275,7 @@ class OMVRpcServiceBTSync extends OMVRpcServiceAbstract {
 				  "uuid":{' . $GLOBALS['OMV_JSONSCHEMA_UUID_UNDEFINED'] . '},
 				  "enable":{"type":"boolean"},
 				  "sharedfolderref":{' . $GLOBALS['OMV_JSONSCHEMA_UUID'] . '},
-				  "secret":{"type":"string"},
+				  "secret":{"type":"string", "format" : "regex", "pattern" : "\/[a-zA-Z0-9]{21}[a-zA-Z0-9]*\/"},
 				  "use_relay_server":{"type":"boolean"},
 				  "use_tracker":{"type":"boolean"},
 				  "use_dht":{"type":"boolean"},
