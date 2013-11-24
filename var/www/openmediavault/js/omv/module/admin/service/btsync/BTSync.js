@@ -72,7 +72,7 @@ Ext
                                     allowBlank : false,
                                     plugins : [ {
                                         ptype : "fieldinfo",
-                                        text : _("Specifies the port to listen to. 0 randomize port")
+                                        text : _("Specifies the port to listen to. Use 0 to randomize port")
                                     } ],
                                     value : 0
                                 },
@@ -90,7 +90,7 @@ Ext
                                     allowBlank : false,
                                     plugins : [ {
                                         ptype : "fieldinfo",
-                                        text : _("Specifies the download speed limit. 0 no limit")
+                                        text : _("Specifies the download speed limit in kB/s. Use 0 to set to unlimited.")
                                     } ],
                                     value : 0
                                 },
@@ -102,7 +102,7 @@ Ext
                                     allowBlank : false,
                                     plugins : [ {
                                         ptype : "fieldinfo",
-                                        text : _("Specifies the upload speed limit. 0 no limit")
+                                        text : _("Specifies the upload speed limit in kB/s. Use 0 to set to unlimited.")
                                     } ],
                                     value : 0
                                 } ]

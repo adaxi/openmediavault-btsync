@@ -39,7 +39,8 @@ xmlstarlet sel -t -m "//services/btsync" \
   -o '  "storage_path" : "/var/lib/btsync/",' -n \
   -o '  "pid_file" : "/var/run/btsync/btsync.pid",' -n \
   -o '  "check_for_updates" : false,' -n \
-  -v "concat('  \"use_upnp\" : ', use_upnp,',')" -n \
+  -i "use_upnp[. = '1']"  -o "      \"use_upnp\" : true," -n -b \
+  -i "use_upnp[. != '1']" -o "      \"use_upnp\" : false," -n -b \
   -v "concat('  \"download_limit\" : ', download_limit,',')" -n \
   -v "concat('  \"upload_limit\" : ', upload_limit,',')" -n \
   -o '  "shared_folders" : [' -n \
@@ -61,23 +62,23 @@ xmlstarlet sel -t -m "//services/btsync/sharedfolders/sharedfolder[enable='1']" 
     fi
     
     xmlstarlet sel -t -m "//services/btsync/sharedfolders/sharedfolder[uuid='${uuid}']" \
-        -o "{" -n \
-        -v "   concat(' \"secret\" : \"', secret,'\",')" -n \
-        -o "   \"dir\" : " ${OMV_XMLSTARLET_GET_SHAREDFOLDER_NAME} -o ", " -n \
-        -i "use_relay_server[. = '1']" -o "  \"use_relay_server\" : true," -n -b \
-        -i "use_relay_server[. != '1']" -o "  \"use_relay_server\" : false," -n -b \
-        -i "use_tracker[. = '1']" -o "  \"use_tracker\" : true," -n -b \
-        -i "use_tracker[. != '1']" -o "  \"use_tracker\" : false," -n -b \
-        -i "use_dht[. = '1']" -o "  \"use_dht\" : true," -n -b \
-        -i "use_dht[. != '1']" -o "  \"use_dht\" : false," -n -b \
-        -i "search_lan[. = '1']" -o "  \"search_lan\" : true," -n -b \
-        -i "search_lan[. != '1']" -o "  \"search_lan\" : false," -n -b \
-        -i "use_sync_trash[. = '1']" -o "  \"use_sync_trash\" : true," -n -b \
-        -i "use_sync_trash[. != '1']" -o "  \"use_sync_trash\" : false," -n -b \
-        -o "  \"known_hosts\" : [ " -n \
-        -o "${KNOWN_HOSTS}" -n \
-        -o "   ]" -n \
-        -o "}" \
+        -o "    {" -n \
+        -v "concat('      \"secret\" : \"', secret,'\",')" -n \
+                                        -o "      \"dir\" : \"" ${OMV_XMLSTARLET_GET_SHAREDFOLDER_PATH} -o "\", " -n \
+        -i "use_relay_server[. = '1']"  -o "      \"use_relay_server\" : true," -n -b \
+        -i "use_relay_server[. != '1']" -o "      \"use_relay_server\" : false," -n -b \
+        -i "use_tracker[. = '1']"       -o "      \"use_tracker\" : true," -n -b \
+        -i "use_tracker[. != '1']"      -o "      \"use_tracker\" : false," -n -b \
+        -i "use_dht[. = '1']"           -o "      \"use_dht\" : true," -n -b \
+        -i "use_dht[. != '1']"          -o "      \"use_dht\" : false," -n -b \
+        -i "search_lan[. = '1']"        -o "      \"search_lan\" : true," -n -b \
+        -i "search_lan[. != '1']"       -o "      \"search_lan\" : false," -n -b \
+        -i "use_sync_trash[. = '1']"    -o "      \"use_sync_trash\" : true," -n -b \
+        -i "use_sync_trash[. != '1']"   -o "      \"use_sync_trash\" : false," -n -b \
+        -o "       \"known_hosts\" : [ " -n \
+        -o "         ${KNOWN_HOSTS}" -n \
+        -o "       ]" -n \
+        -o "    }" \
     ${OMV_CONFIG_FILE} | xmlstarlet unesc >> ${OMV_BTSYNC_CONFIG_FILE}
   done 
   
@@ -85,29 +86,6 @@ cat <<EOF >> ${OMV_BTSYNC_CONFIG_FILE}
   ]     
 }
 EOF
-
-
-  #  "shared_folders" :
-  #[
-    #  {
-        #    //  use --generate-secret in command line to create new secret
-      #"secret" : "MY_SECRET_1",                   // * required field
-      #"dir" : "/home/user/bittorrent/sync_test", // * required field
-
-        #//  use relay server when direct connection fails
-      #"use_relay_server" : true,
-      #"use_tracker" : true,
-      #"use_dht" : false,
-      #"search_lan" : true,
-        #  //  enable SyncArchive to store files deleted on remote devices
-      #"use_sync_trash" : true,
-        #  //  specify hosts to attempt connection without additional search
-      #"known_hosts" :
-      #[
-        #  "192.168.1.2:44444"
-      #]
-    #}
-  # ]
 
 chmod 644 ${OMV_BTSYNC_CONFIG_FILE}
 
