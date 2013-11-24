@@ -23,12 +23,15 @@ set -e
 . /etc/default/openmediavault
 . /usr/share/openmediavault/scripts/helper-functions
 
-OMV_BTSYNC_RUN_AS=${OMV_BTSYNC_RUN_AS:-"btsync"}
+OMV_BTSYNC_RUN_AS=${OMV_BTSYNC_RUN_AS:-"root"}
 OMV_BTSYNC_CONFIG_FILE=${OMV_BTSYNC_CONFIG_FILE:-"/etc/btsync/openmediavault.conf"}
 OMV_BTSYNC_DEFAULT_FILE=${OMV_BTSYNC_DEFAULT_FILE:-"/etc/default/btsync"}
 
 mkdir -p /etc/btsync
 mkdir -p /var/run/btsync
+
+chown ${OMV_BTSYNC_RUN_AS} /var/run/btsync -R
+chown ${OMV_BTSYNC_RUN_AS} /var/lib/btsync -R
 
 xmlstarlet sel -t -m "//services/btsync" \
   -o "//!/usr/sbin/btsync-daemon --config" -n \

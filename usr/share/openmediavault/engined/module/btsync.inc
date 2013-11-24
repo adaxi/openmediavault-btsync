@@ -102,6 +102,14 @@ class OMVModuleBTSync extends OMVModuleServiceAbstract implements
 				"org.openmediavault.services.btsync",
 				array ($this,"setDirty"
 				) );
+		$dispatcher->addListener ( OMV_NOTIFY_CREATE,
+				"org.openmediavault.services.btsync.sharedfolders.sharedfolder",
+				array ($this,"setDirty"
+				) );
+		$dispatcher->addListener ( OMV_NOTIFY_MODIFY,
+				"org.openmediavault.services.btsync.sharedfolders.sharedfolder",
+				array ($this,"setDirty"
+				) );
 	}
 }
 

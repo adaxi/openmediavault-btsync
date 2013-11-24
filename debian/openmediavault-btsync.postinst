@@ -30,8 +30,7 @@ case "$1" in
 		########################################################################
 
 		mkdir -p /etc/btsync
-		getent passwd btsync || useradd --system --user-group --home-dir /var/lib/btsync --create-home btsync
-
+	
 		########################################################################
 		# Update the configuration.
 		# <config>
