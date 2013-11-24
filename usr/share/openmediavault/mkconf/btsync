@@ -28,6 +28,7 @@ OMV_BTSYNC_CONFIG_FILE=${OMV_BTSYNC_CONFIG_FILE:-"/etc/btsync/openmediavault.con
 OMV_BTSYNC_DEFAULT_FILE=${OMV_BTSYNC_DEFAULT_FILE:-"/etc/default/btsync"}
 
 mkdir -p /etc/btsync
+mkdir -p /var/run/btsync
 
 xmlstarlet sel -t -m "//services/btsync" \
   -o "//!/usr/sbin/btsync-daemon --config" -n \
@@ -39,8 +40,8 @@ xmlstarlet sel -t -m "//services/btsync" \
   -o '  "storage_path" : "/var/lib/btsync/",' -n \
   -o '  "pid_file" : "/var/run/btsync/btsync.pid",' -n \
   -o '  "check_for_updates" : false,' -n \
-  -i "use_upnp[. = '1']"  -o "      \"use_upnp\" : true," -n -b \
-  -i "use_upnp[. != '1']" -o "      \"use_upnp\" : false," -n -b \
+  -i "use_upnp[. = '1']"  -o "  \"use_upnp\" : true," -n -b \
+  -i "use_upnp[. != '1']" -o "  \"use_upnp\" : false," -n -b \
   -v "concat('  \"download_limit\" : ', download_limit,',')" -n \
   -v "concat('  \"upload_limit\" : ', upload_limit,',')" -n \
   -o '  "shared_folders" : [' -n \
