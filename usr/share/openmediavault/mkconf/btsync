@@ -34,7 +34,7 @@ xmlstarlet sel -t -m "//services/btsync" \
   -o "// DAEMON_UID=${OMV_BTSYNC_RUN_AS}" -n \
   -o "// DAEMON_UMASK=0002" -n \
   -o "{" -n \
-  -v "concat('  \"device_name\" : \"', device_name, '\"')" -n \
+  -v "concat('  \"device_name\" : \"', device_name, '\"',',')" -n \
   -v "concat('  \"listening_port\" : ', listening_port,',')" -n \
   -o '  "storage_path" : "/var/lib/btsync/",' -n \
   -o '  "pid_file" : "/var/run/btsync/btsync.pid",' -n \
