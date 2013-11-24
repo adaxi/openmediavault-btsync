@@ -100,7 +100,7 @@ class OMVRpcServiceBTSync extends OMVRpcServiceAbstract {
 			  "type":"object",
 			  "properties":{
 				  "enable":{"type":"boolean"},
-				  "listening_port":{"type":"integer","minimum":1,"maximum":65535},
+				  "listening_port":{"type":"integer","minimum":0,"maximum":65535},
 				  "device_name":{"type":"string"},
 				  "use_upnp":{"type":"boolean"},
 				  "download_limit":{"type":"integer"},
