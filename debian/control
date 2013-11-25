@@ -8,7 +8,7 @@ Homepage: http://adaxisoft.be
 
 Package: openmediavault-btsync
 Architecture: all
-Depends: openmediavault (>= 0.5.7)
+Depends: openmediavault (>= 0.5.7), btsync-common
 Priority: optional
 Description: Provides a configuration interface for OpenMediaVault
  BitTorrent Sync is a simple tool that applies p2p protocol for direct  live 
