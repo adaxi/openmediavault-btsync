@@ -1,4 +1,4 @@
-Source: openmediavault-btsync
+Source: openmediavault-btsync-essencia
 Section: net
 Priority: optional
 Maintainer: Gerik Bonaert <dev@adaxisoft.be>
@@ -6,7 +6,7 @@ Build-Depends: debhelper (>> 7), gettext
 Standards-Version: 3.6.10
 Homepage: http://adaxisoft.be
 
-Package: openmediavault-btsync
+Package: openmediavault-btsync-essencia
 Architecture: all
 Depends: openmediavault (>= 0.5.7), btsync-common
 Priority: optional
